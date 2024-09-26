@@ -9,7 +9,7 @@ const AddExpenseModal = ({ open, handleClose, handleAddExpense }) => {
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('');
     const [amount, setAmount] = useState('');
-    const [date, setDate] = useState(new Date().toISOString().slice(0, 10)); // Default to today's date
+    const [date, setDate] = useState(new Date().toISOString().slice(0, 10)); 
 
     const handleSubmit = async () => {
         const newExpense = {
@@ -21,16 +21,16 @@ const AddExpenseModal = ({ open, handleClose, handleAddExpense }) => {
         };
 
         try {
-            // Send the new expense to the backend
+            
             const response = await axios.post('http://localhost:5000/expenses/addExpense', newExpense);
-            handleAddExpense(response.data); // Call the prop function to update the expenses in the Dashboard
-            handleClose(); // Close the modal
-            // Reset form fields
+            handleAddExpense(response.data); 
+            handleClose(); 
+            
             setTitle('');
             setDescription('');
             setCategory('');
             setAmount('');
-            setDate(new Date().toISOString().slice(0, 10)); // Reset to today's date
+            setDate(new Date().toISOString().slice(0, 10)); 
         } catch (err) {
             console.error('Error adding expense:', err);
         }

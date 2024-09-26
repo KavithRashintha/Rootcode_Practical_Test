@@ -70,9 +70,26 @@ const deleteExpense = async (req,res) => {
     }
 }
 
+const filterExpense = async (req,res) => {
+    const category = req.params.category;
+
+    try {
+        const expenses = await ExpenseModel.find({category});
+
+        if(expenses.length === 0 ){
+            return res.status(404).json({ message: 'No expenses found for this category' });
+        }
+
+        res.status(200).json(expenses);
+    }catch (error){
+        res.status(500).json({ error: 'Failed to fetch expenses by category', details: error });
+    }
+}
+
 module.exports = {
     addExpense,
     updateExpense,
     getAllExpenses,
-    deleteExpense
+    deleteExpense,
+    filterExpense
 }

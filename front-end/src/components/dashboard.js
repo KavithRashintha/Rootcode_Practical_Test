@@ -24,9 +24,6 @@ function Dashboard() {
 
     const handleAddExpense = (newExpense) => {
         setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
-
-        // Optionally, send a POST request to add the expense to the server
-        // await axios.post('http://localhost:5000/expenses/addExpense', newExpense);
     };
 
     return (

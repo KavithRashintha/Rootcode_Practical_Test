@@ -15,7 +15,7 @@ const Expense = ({ title, date, description, category, amount }) => {
     return (
         <Card sx={{ width: 300, margin: 2, padding: 2, position: 'relative' }}>
             <CardContent>
-                {/* Title and Date in the same line */}
+                
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
                         {title}
@@ -25,7 +25,7 @@ const Expense = ({ title, date, description, category, amount }) => {
                     </Typography>
                 </Box>
 
-                {/* Description and Category */}
+                
                 <Typography variant="body2" sx={{ marginTop: 1 }}>
                     {description}
                 </Typography>
@@ -33,13 +33,13 @@ const Expense = ({ title, date, description, category, amount }) => {
                     Category: {category}
                 </Typography>
 
-                {/* Amount */}
+                
                 <Typography variant="h6" sx={{ marginTop: 2, fontWeight: 'bold' }}>
                     ${amount !== undefined ? amount.toFixed(2) : '0.00'}
                 </Typography>
             </CardContent>
 
-            {/* Edit and Delete Icons */}
+            
             <Box display="flex" justifyContent="flex-end" sx={{ position: 'absolute', bottom: 10, right: 10 }}>
                 <IconButton aria-label="edit" onClick={handleEditClick}>
                     <EditIcon />

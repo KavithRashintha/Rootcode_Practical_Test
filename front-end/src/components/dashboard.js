@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Expense from '../components/expense';
-import { Box, Typography } from '@mui/material';
+import AddExpenseModal from '../modal/addExpenseModal';
+import { Box, Typography, Button } from '@mui/material';
 
 function Dashboard() {
     const [expenses, setExpenses] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchExpenses = async () => {
@@ -20,11 +22,26 @@ function Dashboard() {
         fetchExpenses();
     }, []);
 
+    const handleAddExpense = (newExpense) => {
+        setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
+
+        // Optionally, send a POST request to add the expense to the server
+        // await axios.post('http://localhost:5000/expenses/addExpense', newExpense);
+    };
+
     return (
         <>
             <Typography variant="h4" sx={{ margin: 2 }}>
                 Expense Dashboard
             </Typography>
+            <Button
+                variant="contained"
+                color="primary"
+                sx={{ position: 'absolute', top: 16, right: 16 }}
+                onClick={() => setModalOpen(true)}
+            >
+                Create Expense
+            </Button>
             <Box display="flex" flexWrap="wrap" justifyContent="center">
                 {expenses.length > 0 ? (
                     expenses.map(expense => (
@@ -43,6 +60,11 @@ function Dashboard() {
                     </Typography>
                 )}
             </Box>
+            <AddExpenseModal
+                open={modalOpen}
+                handleClose={() => setModalOpen(false)}
+                handleAddExpense={handleAddExpense}
+            />
         </>
     );
 }

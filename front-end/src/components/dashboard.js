@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Expense from '../components/expense';
-import AddExpenseModal from '../modal/addExpenseModal';
-import UpdateExpenseModal from '../modal/updateExpenseModal';
+import AddExpenseModal from '../modals/addExpenseModal';
+import UpdateExpenseModal from '../modals/updateExpenseModal';
 import { Box, Button, FormControl, Select, MenuItem } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 function Dashboard() {
     const [expenses, setExpenses] = useState([]);
+    const [response, setResponse] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [updateModalOpen, setUpdateModalOpen] = useState(false);
-    const [selectedExpense, setSelectedExpense] = useState(null);
     const [category, setCategory] = useState('All');
+    const selectedExpenseId = useSelector((state) => state.expense.selectedExpenseId);
+    const [selectedExpense, setSelectedExpense] = useState(null);
 
     const categories = ['Food', 'Household', 'Social Life', 'Transportation', 'Health', 'Miscellaneous'];
 
@@ -21,13 +24,14 @@ function Dashboard() {
 
         try {
             const response = await axios.get(url);
-            if (response.data.length === 0) {
-                alert(`No expenses found for the category: ${category}`);
-            }
+            setResponse(response);
             setExpenses(response.data);
         } catch (error) {
+            console.log(response.status);
+            if (response.status === 200) {
+                alert(`No expenses found for the category: ${category}`);
+            }
             console.error("Error fetching expenses:", error);
-            alert("An error occurred while fetching expenses. Please try again.");
         }
     };
 
@@ -35,20 +39,27 @@ function Dashboard() {
         fetchExpenses();
     }, [category]);
 
+    useEffect(() => {
+        if (selectedExpenseId) {
+            const expenseToUpdate = expenses.find(exp => exp._id === selectedExpenseId);
+            setSelectedExpense(expenseToUpdate);
+        }
+    }, [selectedExpenseId, expenses]);
+
     const handleAddExpense = async (newExpense) => {
         setModalOpen(false);
         await fetchExpenses();
     };
 
-    const handleUpdateExpense = async (updatedExpense) => {
+    const handleUpdateExpense = async () => {
         setUpdateModalOpen(false);
         await fetchExpenses();
     };
 
     return (
         <>
-            <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ margin: 2 }}>
-                <FormControl variant="outlined" sx={{ minWidth: 120 }}>
+            <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ margin: 2, paddingLeft: 5, paddingTop: 4, paddingRight: 5 }}>
+                <FormControl variant="outlined" sx={{ minWidth: 220 }}>
                     <Select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
@@ -74,10 +85,10 @@ function Dashboard() {
                 {expenses.length > 0 ? (
                     expenses.map(expense => (
                         <Expense
-                            key={expense.id}
+                            key={expense._id}
+                            id={expense._id}
                             {...expense}
                             onEdit={(expenseData) => {
-                                setSelectedExpense(expenseData);
                                 setUpdateModalOpen(true);
                             }}
                         />
